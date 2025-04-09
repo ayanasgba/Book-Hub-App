@@ -19,8 +19,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllComment() {
+    public List<Comment> getAllComments() {
         return commentRepository.findAll();
+    }
+
+    @Override
+    public void getCommentById(Long id) {
+        commentRepository.findById(id);
     }
 
     @Override

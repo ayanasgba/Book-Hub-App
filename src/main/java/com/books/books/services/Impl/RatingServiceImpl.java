@@ -18,8 +18,13 @@ public class RatingServiceImpl implements RatingService {
         this.ratingRepository = ratingRepository;
     }
     @Override
-    public List<Rating> getAllRating() {
+    public List<Rating> getAllRatings() {
         return ratingRepository.findAll();
+    }
+
+    @Override
+    public void getRatingById(Long id) {
+        ratingRepository.findById(id);
     }
 
     @Override
@@ -39,5 +44,19 @@ public class RatingServiceImpl implements RatingService {
         ratingOld.setUser(rating.getUser());
         ratingOld.setBook(rating.getBook());
         ratingRepository.save(ratingOld);
+    }
+
+    @Override
+    public double getAverageRatingForBook(Long id) {
+        List<Rating> ratings = ratingRepository.findByBookId(id);
+        if (ratings.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0;
+        for (Rating rating : ratings) {
+            sum += rating.getPoint();
+        }
+
+        return sum / ratings.size();
     }
 }

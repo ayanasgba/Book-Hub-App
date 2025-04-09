@@ -2,6 +2,7 @@ package com.books.books.models;
 
 import com.books.books.enums.Roles;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class User {
 
     private String username;
 
+    @Email
     private String email;
 
     private String password;

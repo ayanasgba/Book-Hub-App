@@ -18,13 +18,17 @@ public class BookServiceImpl implements BookService {
         this.bookRepository = bookRepository;
     }
     @Override
-    public List<Book> getAllBook() {
+    public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
     @Override
-    public void createBook(Book book) {
-        bookRepository.save(book);
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book with id " + id + " is not found"));
+    }
+    @Override
+    public Book createBook(Book book) {
+        return bookRepository.save(book);
     }
 
     @Override
@@ -33,14 +37,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBook(Long id, Book book) {
-        Book bookOld = bookRepository.findById(id).orElseThrow(()-> new RuntimeException());
+    public Book updateBook(Long id, Book book) {
+        Book bookOld = bookRepository.findById(id).orElseThrow(()-> new RuntimeException("Book with id " + id + " is not found"));
         bookOld.setTitle(book.getTitle());
         bookOld.setAuthor(book.getAuthor());
         bookOld.setDescription(book.getDescription());
         bookOld.setPublicationDate(book.getPublicationDate());
         bookOld.setGenres(book.getGenres());
         bookOld.setComments(book.getComments());
-        bookRepository.save(bookOld);
+        return bookRepository.save(bookOld);
     }
 }
