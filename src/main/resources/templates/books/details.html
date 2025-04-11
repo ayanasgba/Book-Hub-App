@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Details</title>
+</head>
+<body>
+<h1 th:text="${book.title}"></h1>
+
+<p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
+<p><strong>Description:</strong> <span th:text="${book.description}"></span></p>
+<p><strong>Publication Date:</strong> <span th:text="${book.publicationDate}"></span></p>
+<p><strong>Genre:</strong> <span th:text="${book.genres}"></span></p>
+
+<br/>
+<a th:href="@{/books/getAll}">Back to List</a>
+</body>
+</html>

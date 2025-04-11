@@ -1,9 +1,11 @@
 package com.books.books.services.Impl;
 
+import com.books.books.enums.Roles;
 import com.books.books.models.User;
 import com.books.books.repositories.UserRepository;
 import com.books.books.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,8 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers() {
@@ -47,5 +51,19 @@ public class UserServiceImpl implements UserService {
         userOld.setRoles(user.getRoles());
         userOld.setComments(user.getComments());
         userRepository.save(userOld);
+    }
+
+    @Override
+    public boolean registerUser(String username, String email, String rawPassword) {
+        if (userRepository.existsByUsername(username)) return false;
+
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setRoles(Roles.USER);
+
+        userRepository.save(user);
+        return true;
     }
 }
