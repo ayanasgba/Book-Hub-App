@@ -2,22 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title>Users</title>
+  <title>Users List</title>
 </head>
 <body>
-<h2>All Users</h2>
+<h1>Users</h1>
 
-<div sec:authorize="hasRole('ADMIN')">
-  <a href="/admin/panel">Админ-панель</a>
-  <a href="/books/create">Создать книгу</a>
-</div>
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/users/create}">Add New User</a>
 
+<br/><br/>
 
-<ul>
-  <li th:each="user : ${users}">
-    <span th:text="${user.username}">Username</span> -
-    <span th:text="${user.email}">Email</span>
-  </li>
-</ul>
+<table border="1" cellpadding="8">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Email</th>
+    <th>Role(s)</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.id}"></td>
+    <td th:text="${user.username}"></td>
+    <td th:text="${user.email}"></td>
+    <td>
+      <span th:each="role : ${user.roles}" th:text="${role.name} + ' '" />
+    </td>
+
+    <td sec:authorize="hasRole('ADMIN')">
+      <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a> |
+      <form th:action="@{'/users/delete/' + ${user.id}}" method="post" style="display:inline;">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
 </body>
 </html>

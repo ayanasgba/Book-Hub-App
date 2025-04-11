@@ -8,6 +8,7 @@
 <h1>Books</h1>
 
 <a sec:authorize="hasRole('ADMIN')" th:href="@{/books/create}">Add New Book</a>
+
 <br/><br/>
 
 <table border="1" cellpadding="8">
@@ -30,6 +31,7 @@
         <td th:text="${book.description}"></td>
         <td th:text="${book.publicationDate}"></td>
         <td th:text="${book.genres}"></td>
+
         <td sec:authorize="hasRole('ADMIN')">
             <a th:href="@{'/books/edit/' + ${book.id}}">Edit</a> |
             <form th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline;">

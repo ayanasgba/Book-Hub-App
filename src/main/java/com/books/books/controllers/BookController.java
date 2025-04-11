@@ -21,7 +21,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     public String listBooks(Model model) {
         List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
@@ -35,8 +35,6 @@ public class BookController {
         return "books/details";
     }
 
-
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("book", new Book());
@@ -48,10 +46,9 @@ public class BookController {
     @PostMapping("/save")
     public String saveBook(@ModelAttribute Book book) {
         bookService.createBook(book);
-        return "redirect:/books/getAll";
+        return "redirect:/books";
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Book book = bookService.getBookById(id);
@@ -59,17 +56,15 @@ public class BookController {
         return "books/form";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/{id}")
     public String updateBook(@PathVariable Long id, @ModelAttribute Book book) {
         bookService.updateBook(id, book);
-        return "redirect:/books/getAll";
+        return "redirect:/books";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public String  deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
-        return "redirect:/books/getAll";
+        return "redirect:/books";
     }
 }

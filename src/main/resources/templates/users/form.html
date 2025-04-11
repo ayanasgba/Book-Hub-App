@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create or Edit User</title>
+</head>
+<body>
+
+<h1 th:if="${user != null}" th:text="${user.id == null} ? 'Create New User' : 'Edit User'">User Form</h1>
+<h1 th:if="${user == null}">User Not Found</h1>
+
+<!-- Create form -->
+<form th:if="${user != null and user.id == null}" th:action="@{/users/save}" method="post" th:object="${user}">
+  <label>Username:</label><br/>
+  <input type="text" th:field="*{username}" /><br/><br/>
+
+  <label>Email:</label><br/>
+  <input type="email" th:field="*{email}" /><br/><br/>
+
+  <label>Password:</label><br/>
+  <input type="password" th:field="*{password}" /><br/><br/>
+
+  <label>Roles:</label><br/>
+  <select multiple th:field="*{roles}">
+    <option th:each="r : ${T(com.books.books.enums.Roles).values()}"
+            th:value="${r}" th:text="${r}">Role</option>
+  </select><br/><br/>
+
+  <button type="submit">Create</button>
+</form>
+
+<!-- Edit form -->
+<form th:if="${user != null and user.id != null}" th:action="@{'/users/update/' + ${user.id}}" method="post" th:object="${user}">
+  <label>Username:</label><br/>
+  <input type="text" th:field="*{username}" /><br/><br/>
+
+  <label>Email:</label><br/>
+  <input type="email" th:field="*{email}" /><br/><br/>
+
+  <label>Password: (leave empty to keep current)</label><br/>
+  <input type="password" th:field="*{password}" /><br/><br/>
+
+  <label>Roles:</label><br/>
+  <select multiple th:field="*{roles}">
+    <option th:each="r : ${T(com.books.books.enums.Roles).values()}"
+            th:value="${r}" th:text="${r}">Role</option>
+  </select><br/><br/>
+
+  <button type="submit">Update</button>
+</form>
+
+<a th:href="@{/users}">Back to User List</a>
+</body>
+</html>

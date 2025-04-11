@@ -21,6 +21,10 @@ public class WebSecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private CustomSuccessHandler customSuccessHandler;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -32,7 +36,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/getAll", true)
+                        .successHandler(customSuccessHandler)
                         .permitAll()
                 )
                 .logout((logout) -> logout
