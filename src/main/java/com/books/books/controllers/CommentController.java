@@ -35,7 +35,7 @@ public class CommentController {
     CommentRepository commentRepository;
 
     @PostMapping("/book/{bookId}")
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public String addComment(
             @PathVariable Long bookId,
             @RequestParam("text") String text,
