@@ -4,6 +4,8 @@ import com.books.books.models.Book;
 import com.books.books.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +30,20 @@ public class BookController {
         return "books/list";
     }
 
+//    @GetMapping("/{id}")
+//    public String viewBook(@PathVariable Long id, Model model) {
+//        Book book = bookService.getBookById(id);
+//        model.addAttribute("book", book);
+//        return "books/details";
+//    }
+
     @GetMapping("/{id}")
-    public String viewBook(@PathVariable Long id, Model model) {
+    public String viewBook(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Book book = bookService.getBookById(id);
         model.addAttribute("book", book);
+        if (userDetails != null) {
+            model.addAttribute("currentUsername", userDetails.getUsername());
+        }
         return "books/details";
     }
 

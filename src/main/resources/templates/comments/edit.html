@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Редактировать комментарий</title>
+</head>
+<body>
+<h2>Редактировать комментарий</h2>
+
+<form th:action="@{/comments/update/{id}(id=${comment.id})}" method="post">
+  <textarea name="text" th:text="${comment.text}" required></textarea>
+  <br>
+  <button type="submit">Сохранить</button>
+</form>
+
+<a th:href="@{/books/{bookId}(bookId=${comment.book.id})}">← Назад к книге</a>
+</body>
+</html>

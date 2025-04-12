@@ -11,6 +11,42 @@
 <p><strong>Publication Date:</strong> <span th:text="${book.publicationDate}"></span></p>
 <p><strong>Genre:</strong> <span th:text="${book.genres}"></span></p>
 
+<!-- ✅ Форма комментария -->
+<h2>Comment this book</h2>
+<form th:action="@{/comments/book/{bookId}(bookId=${book.id})}" method="post">
+    <textarea name="text" placeholder="Leave a comment" required></textarea>
+    <br>
+    <button type="submit">Send</button>
+</form>
+
+<!-- ✅ Список комментариев -->
+<h2>Comments</h2>
+
+<div th:if="${book.comments.isEmpty()}">
+    <p>No comments yet</p>
+</div>
+
+<ul th:if="${not #lists.isEmpty(book.comments)}">
+    <li th:each="comment : ${book.comments}">
+        <p>
+            <strong th:text="${comment.user.username}">Username</strong>
+            <em th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}">Date</em>
+        </p>
+        <p th:text="${comment.text}">Comment</p>
+
+        <!-- ✅ Только автор может редактировать / удалять -->
+        <div th:if="${comment.user.username == currentUsername}">
+            <form th:action="@{/comments/delete/{id}(id=${comment.id})}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+
+            <a th:href="@{/comments/edit/{id}(id=${comment.id})}">Update</a>
+        </div>
+
+        <hr>
+    </li>
+</ul>
+
 <br/>
 <a th:href="@{/books}">Back to List</a>
 </body>
