@@ -3,44 +3,123 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Books List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .top-links {
+            margin-bottom: 20px;
+        }
+
+        .top-links a, .top-links form {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .book-card {
+            background: white;
+            padding: 16px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        .book-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+
+        .book-field {
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions a, .actions button {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-<h1>Books</h1>
 
-<a sec:authorize="hasRole('ADMIN')" th:href="@{/books/create}">Add New Book</a>
+<h1><a th:href="@{/books}"> Books </a></h1>
 
-<br/><br/>
+<div class="top-links">
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/users}">Manage Users</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/books/create}">Add New Book</a>
+    <form th:action="@{/logout}" method="post" style="display:inline;">
+        <button type="submit">Logout</button>
+    </form>
+</div>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Description</th>
-        <th>Publication Date</th>
-        <th>Genre</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}"></td>
-        <td th:text="${book.title}"></td>
-        <td th:text="${book.author}"></td>
-        <td th:text="${book.description}"></td>
-        <td th:text="${book.publicationDate}"></td>
-        <td th:text="${book.genres}"></td>
 
-        <td sec:authorize="hasRole('ADMIN')">
-            <a th:href="@{'/books/edit/' + ${book.id}}">Edit</a> |
+<form th:action="@{/books/search}" method="get" style="margin-bottom: 20px;">
+    <input type="text" name="title" placeholder="Search by title" />
+    <input type="text" name="author" placeholder="Search by author" />
+
+    <select name="genre">
+        <option value="">All Genres</option>
+        <option th:each="g : ${T(com.books.books.enums.Genres).values()}"
+                th:value="${g}" th:text="${g}"></option>
+    </select>
+
+    <input type="number" name="minRating" step="0.1" min="0" max="5" placeholder="Min rating" />
+
+    <button type="submit">Search</button>
+</form>
+
+<div th:each="book : ${books}" class="book-card">
+    <h2 th:text="${book.title}">Book Title</h2>
+
+    <div class="book-field">
+        <strong>Description:</strong>
+        <span th:text="${book.description}">Some description</span>
+    </div>
+
+    <div class="book-field">
+        <strong>Author:</strong>
+        <span th:text="${book.author}">Author Name</span>
+    </div>
+
+    <div class="book-field">
+        <strong>Genre:</strong>
+        <span th:text="${book.genres}">Genre</span>
+    </div>
+
+    <div class="book-field">
+        <strong>Publication Date:</strong>
+        <span th:text="${book.publicationDate}">Date</span>
+    </div>
+
+    <div>
+        <p><strong>Average Rating:</strong>
+            <span th:text="${book.averageRating != null ? book.averageRating : 'No ratings yet'}"></span>
+        </p>
+    </div>
+    <div class="actions">
+        <a th:href="@{/books/{id}(id=${book.id})}">View Details</a>
+        <span sec:authorize="hasRole('ADMIN')">
+            |
+            <a th:href="@{'/books/edit/' + ${book.id}}">Edit</a>
             <form th:action="@{'/books/delete/' + ${book.id}}" method="post" style="display:inline;">
                 <input type="hidden" name="_method" value="delete"/>
                 <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </span>
+    </div>
+</div>
+
+
 </body>
 </html>
+

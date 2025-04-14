@@ -7,7 +7,13 @@
 <body>
 <h1>Users</h1>
 
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/books}">Manage Books</a>
+</br>
 <a sec:authorize="hasRole('ADMIN')" th:href="@{/users/create}">Add New User</a>
+</br>
+<form th:action="@{/logout}" method="post" style="display:inline;">
+  <button type="submit">Logout</button>
+</form>
 
 <br/><br/>
 

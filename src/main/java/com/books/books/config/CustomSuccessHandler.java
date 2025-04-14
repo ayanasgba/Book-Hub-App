@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Component
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
-
+    
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -24,7 +24,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         if (isAdmin) {
             response.sendRedirect("/admin/panel");
         } else {
-            response.sendRedirect("/users");
+            response.sendRedirect("/books");
         }
     }
+
 }

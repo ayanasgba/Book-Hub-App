@@ -46,17 +46,4 @@ public class RatingServiceImpl implements RatingService {
         ratingRepository.save(ratingOld);
     }
 
-    @Override
-    public double getAverageRatingForBook(Long id) {
-        List<Rating> ratings = ratingRepository.findByBookId(id);
-        if (ratings.isEmpty()) {
-            return 0.0;
-        }
-        double sum = 0;
-        for (Rating rating : ratings) {
-            sum += rating.getPoint();
-        }
-
-        return sum / ratings.size();
-    }
 }

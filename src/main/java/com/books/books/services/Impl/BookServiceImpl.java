@@ -1,7 +1,10 @@
 package com.books.books.services.Impl;
 
+import com.books.books.enums.Genres;
 import com.books.books.models.Book;
+import com.books.books.models.Rating;
 import com.books.books.repositories.BookRepository;
+import com.books.books.repositories.RatingRepository;
 import com.books.books.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,9 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository) {
@@ -44,7 +50,37 @@ public class BookServiceImpl implements BookService {
         bookOld.setDescription(book.getDescription());
         bookOld.setPublicationDate(book.getPublicationDate());
         bookOld.setGenres(book.getGenres());
-        bookOld.setComments(book.getComments());
+//        bookOld.setComments(book.getComments());
         return bookRepository.save(bookOld);
     }
+
+    @Override
+    public void updateAverageRating(Book book) {
+        List<Rating> ratings = ratingRepository.findByBookId(book.getId());
+        double avg = ratings.stream()
+                .mapToInt(Rating::getPoint)
+                .average()
+                .orElse(0.0);
+        book.setAverageRating(avg);
+        bookRepository.save(book);
+    }
+
+    @Override
+    public List<Book> searchBooks(String title, String author, String genreStr, Double minRating) {
+        title = (title == null || title.isEmpty()) ? null : "%" + title + "%";
+        author = (author == null || author.isEmpty()) ? null : "%" + author + "%";
+
+        Genres genre = null;
+        if (genreStr != null && !genreStr.isEmpty()) {
+            try {
+                genre = Genres.valueOf(genreStr);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid genre: " + genreStr);
+            }
+        }
+
+        return bookRepository.searchBooks(title, author, genre, minRating);
+    }
+
+
 }

@@ -4,6 +4,7 @@
     <title>Book Details</title>
 </head>
 <body>
+
 <h1 th:text="${book.title}"></h1>
 
 <p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
@@ -11,7 +12,22 @@
 <p><strong>Publication Date:</strong> <span th:text="${book.publicationDate}"></span></p>
 <p><strong>Genre:</strong> <span th:text="${book.genres}"></span></p>
 
-<!-- ✅ Форма комментария -->
+<p><strong>Average Rating:</strong>
+    <span th:text="${book.averageRating != null ? book.averageRating : 'No ratings yet'}"></span>
+</p>
+
+<div th:if="${#authorization.expression('isAuthenticated()')}">
+    <h2>Rate this book</h2>
+    <form th:action="@{/ratings/book/{bookId}(bookId=${book.id})}" method="post">
+        <label for="point">Your Rating (1–5):</label>
+        <input type="number" name="point" min="1" max="5" required>
+        <button type="submit">Submit Rating</button>
+    </form>
+</div>
+<div th:if="${#authorization.expression('!isAuthenticated()')}">
+    <p><em>Log in to rate this book</em></p>
+</div>
+
 <h2>Comment this book</h2>
 <form th:action="@{/comments/book/{bookId}(bookId=${book.id})}" method="post">
     <textarea name="text" placeholder="Leave a comment" required></textarea>
@@ -19,7 +35,6 @@
     <button type="submit">Send</button>
 </form>
 
-<!-- ✅ Список комментариев -->
 <h2>Comments</h2>
 
 <div th:if="${book.comments.isEmpty()}">
@@ -34,7 +49,6 @@
         </p>
         <p th:text="${comment.text}">Comment</p>
 
-        <!-- ✅ Только автор может редактировать / удалять -->
         <div th:if="${comment.user.username == currentUsername}">
             <form th:action="@{/comments/delete/{id}(id=${comment.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
@@ -49,5 +63,6 @@
 
 <br/>
 <a th:href="@{/books}">Back to List</a>
+
 </body>
 </html>

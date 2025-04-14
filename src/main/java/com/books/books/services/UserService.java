@@ -11,4 +11,6 @@ public interface UserService {
     public void deleteUser(Long id);
     public void updateUser(Long id, User user);
     public boolean registerUser(String username, String email, String rawPassword);
+    public User findByUsername(String username);
+
 }

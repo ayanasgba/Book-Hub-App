@@ -33,7 +33,12 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private Genres genres;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings;
+
+    private Double averageRating;
 
 }
