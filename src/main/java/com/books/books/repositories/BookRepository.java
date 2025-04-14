@@ -10,15 +10,6 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    @Query(value = "SELECT * FROM books WHERE author LIKE ?1",  nativeQuery = true)
-    List<Book> getAllBooksByAuthor(String author);
-
-    @Query(value = "SELECT * FROM books WHERE title LIKE ?1",  nativeQuery = true)
-    List<Book> getAllBooksByTitle(String title);
-
-    @Query(value = "SELECT * FROM books WHERE title LIKE ?1 AND author LIKE ?2", nativeQuery = true)
-    List<Book> getAllBooksByTitleAndAuthor(String title, String author);
-
     @Query("""
     SELECT b FROM Book b
     WHERE (:title IS NULL OR b.title LIKE :title)
