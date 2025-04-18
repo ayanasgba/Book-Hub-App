@@ -4,7 +4,6 @@ import com.books.books.models.Book;
 import com.books.books.services.BookService;
 import com.books.books.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -71,7 +70,6 @@ public class BookController {
         return "books/form";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public String saveBook(@ModelAttribute Book book,
                            @RequestParam("coverImage") MultipartFile coverImage) throws IOException {

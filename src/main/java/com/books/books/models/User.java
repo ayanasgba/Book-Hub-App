@@ -48,7 +48,7 @@ public class User {
     @Column(nullable = false, length = 20)
     private Roles roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
 }

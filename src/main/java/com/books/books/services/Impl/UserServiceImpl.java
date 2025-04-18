@@ -36,19 +36,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Override
     public void updateUser(Long id, User user) {
         User userOld = userRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException(
+                .orElseThrow(() -> new RuntimeException(
                         "User not found with ID: " + id));
+
         userOld.setUsername(user.getUsername());
         userOld.setEmail(user.getEmail());
-        userOld.setPassword(user.getPassword());
+
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            userOld.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
         userOld.setRoles(user.getRoles());
         userOld.setComments(user.getComments());
+
         userRepository.save(userOld);
     }
 

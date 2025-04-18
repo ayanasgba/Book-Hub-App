@@ -36,7 +36,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/books/create", "/books/edit/{id}", "/books/delete/{id}").hasRole("ADMIN")
+                        .requestMatchers("/books/create", "/books/save", "/books/edit/{id}", "/books/delete/{id}").hasRole("ADMIN")
+                        .requestMatchers("/comments//edit/{id}", "/comments/update/{id}", "/comments/delete/{id}").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

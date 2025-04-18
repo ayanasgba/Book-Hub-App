@@ -9,7 +9,6 @@ import com.books.books.repositories.UserRepository;
 import com.books.books.services.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -59,7 +58,6 @@ public class CommentController {
     }
 
     @GetMapping("/edit/{id}")
-    @PreAuthorize("hasRole('USER')")
     public String showEditForm(@PathVariable Long id,
                                Model model,
                                @AuthenticationPrincipal UserDetails userDetails) {
@@ -73,7 +71,6 @@ public class CommentController {
     }
 
     @PostMapping("/update/{id}")
-    @PreAuthorize("hasRole('USER')")
     public String updateComment(@PathVariable Long id,
                                 @RequestParam("text") String newText,
                                 @AuthenticationPrincipal UserDetails userDetails) {
@@ -89,7 +86,6 @@ public class CommentController {
     }
 
     @PostMapping("/delete/{id}")
-    @PreAuthorize("hasRole('USER')")
     public String deleteComment(@PathVariable Long id,
                                 @AuthenticationPrincipal UserDetails userDetails) {
         Comment comment = commentRepository.findById(id)
