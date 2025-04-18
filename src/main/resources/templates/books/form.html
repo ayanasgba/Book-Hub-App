@@ -6,31 +6,59 @@
 <body>
 <h1 th:text="${book.id == null} ? 'Create New Book' : 'Edit Book'"></h1>
 
-<!-- Форма создания -->
-<form th:if="${book.id == null}" th:action="@{/books/save}" method="post" th:object="${book}">
-    <label>Title:</label><br/>
-    <input type="text" th:field="*{title}" /><br/><br/>
+<!-- Сreate form -->
+<form th:if="${book.id == null}"
+      th:action="@{/books/save}"
+      method="post" th:object="${book}"
+      enctype="multipart/form-data">
 
-    <label>Author:</label><br/>
-    <input type="text" th:field="*{author}" /><br/><br/>
+    <label>Title:</label>
+    <br/>
 
-    <label>Description:</label><br/>
-    <textarea th:field="*{description}" rows="4" cols="50"></textarea><br/><br/>
+    <input type="text" th:field="*{title}" />
+    <br/><br/>
+
+    <label>Author:</label>
+    <br/>
+
+    <input type="text" th:field="*{author}" />
+    <br/><br/>
+
+    <label>Description:</label>
+    <br/>
+
+    <textarea th:field="*{description}" rows="4" cols="50"></textarea>
+    <br/><br/>
 
     <label>Publication Date:</label><br/>
-    <input type="text" th:field="*{publicationDate}" /><br/><br/>
+    <input type="text" th:field="*{publicationDate}"/>
+    <br/><br/>
 
-    <label>Genre:</label><br/>
+    <label>Genre:</label>
+    <br/>
+
     <select th:field="*{genres}">
         <option th:each="g : ${T(com.books.books.enums.Genres).values()}"
-                th:value="${g}" th:text="${g}">Genre</option>
-    </select><br/><br/>
+                th:value="${g}"
+                th:text="${g}">Genre</option>
+    </select>
+    <br/><br/>
+
+    <label>Cover Image:</label>
+    <br/>
+    <input type="file" name="coverImage" accept="image/*"/>
+    <br/><br/>
 
     <button type="submit">Create</button>
 </form>
 
-<!-- Форма редактирования -->
-<form th:if="${book.id != null}" th:action="@{'/books/update/' + ${book.id}}" method="post" th:object="${book}">
+<!-- Update form -->
+<form th:if="${book.id != null}"
+      th:action="@{'/books/update/' + ${book.id}}"
+      method="post"
+      th:object="${book}"
+      enctype="multipart/form-data">
+
     <label>Title:</label><br/>
     <input type="text" th:field="*{title}" /><br/><br/>
 
@@ -48,6 +76,9 @@
         <option th:each="g : ${T(com.books.books.enums.Genres).values()}"
                 th:value="${g}" th:text="${g}">Genre</option>
     </select><br/><br/>
+
+    <label>Cover Image:</label><br/>
+    <input type="file" name="coverImage" accept="image/*"/><br/><br/>
 
     <button type="submit">Update</button>
 </form>

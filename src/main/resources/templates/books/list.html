@@ -81,6 +81,13 @@
 <div th:each="book : ${books}" class="book-card">
     <h2 th:text="${book.title}">Book Title</h2>
 
+    <div class="book-field" th:if="${book.coverFilename}">
+        <img th:src="@{'/uploads/' + ${book.coverFilename}}"
+             alt="Cover image of book"
+             style="max-width:100px; display:block; margin-bottom:10px;"/>
+    </div>
+
+
     <div class="book-field">
         <strong>Description:</strong>
         <span th:text="${book.description}">Some description</span>

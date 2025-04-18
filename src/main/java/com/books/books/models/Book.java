@@ -30,6 +30,8 @@ public class Book {
 
     private String publicationDate;
 
+    private String coverFilename;
+
     @Enumerated(EnumType.STRING)
     private Genres genres;
 
