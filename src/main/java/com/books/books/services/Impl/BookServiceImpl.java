@@ -15,13 +15,12 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
-
-    @Autowired
     private RatingRepository ratingRepository;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, RatingRepository ratingRepository) {
         this.bookRepository = bookRepository;
+        this.ratingRepository = ratingRepository;
     }
     @Override
     public List<Book> getAllBooks() {
@@ -30,7 +29,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book with id " + id + " is not found"));
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        "Book not found with id: " + id));
     }
     @Override
     public Book createBook(Book book) {
@@ -38,20 +39,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
-    }
-
-    @Override
     public Book updateBook(Long id, Book book) {
-        Book bookOld = bookRepository.findById(id).orElseThrow(()-> new RuntimeException("Book with id " + id + " is not found"));
+        Book bookOld = bookRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException(
+                        "Book not found with id: " + id));
         bookOld.setTitle(book.getTitle());
         bookOld.setAuthor(book.getAuthor());
         bookOld.setDescription(book.getDescription());
         bookOld.setPublicationDate(book.getPublicationDate());
         bookOld.setGenres(book.getGenres());
-//        bookOld.setComments(book.getComments());
+        bookOld.setCoverFilename(book.getCoverFilename());
         return bookRepository.save(bookOld);
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 
     @Override
@@ -74,13 +77,11 @@ public class BookServiceImpl implements BookService {
         if (genreStr != null && !genreStr.isEmpty()) {
             try {
                 genre = Genres.valueOf(genreStr);
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid genre: " + genreStr);
+            } catch (IllegalArgumentException ex) {
+                throw new RuntimeException("Invalid genre: " + genreStr, ex);
             }
         }
 
         return bookRepository.searchBooks(title, author, genre, minRating);
     }
-
-
 }

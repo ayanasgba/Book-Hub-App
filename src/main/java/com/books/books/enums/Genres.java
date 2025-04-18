@@ -1,18 +1,17 @@
 package com.books.books.enums;
 
 public enum Genres {
-    FICTION,
-    NON_FICTION,
-    ROMANCE,
-    MYSTERY,
+    BIOGRAPHY,
+    CHILDREN_LITERATURE,
+    CLASSIC,
+    DETECTIVE,
     FANTASY,
+    FICTION,
     HISTORICAL,
     HORROR,
-    YOUNG_ADULT,
-    CHILDREN_LITERATURE,
-    BIOGRAPHY,
+    MYSTERY,
+    NON_FICTION,
+    ROMANCE,
     SCIENCE_FICTION,
-    DETECTIVE,
-    CLASSIC
-
+    YOUNG_ADULT;
 }

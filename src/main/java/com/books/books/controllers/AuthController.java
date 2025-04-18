@@ -12,24 +12,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthController {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
-        return "register"; // register.html
+        return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
-        boolean success = userService.registerUser(user.getUsername(), user.getEmail(), user.getPassword());
+        boolean registered = userService.registerUser(
+                user.getUsername(), user.getEmail(), user.getPassword());
 
-        if (!success) {
+        if (!registered) {
             model.addAttribute("error", "Username already exists");
             return "register";
         }
-
         return "redirect:/login";
     }
 

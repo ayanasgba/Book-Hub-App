@@ -9,7 +9,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,6 +38,17 @@ public class BookController {
     @GetMapping
     public String listBooks(Model model) {
         List<Book> books = bookService.getAllBooks();
+        model.addAttribute("books", books);
+        return "books/list";
+    }
+
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam(required = false) String title,
+                              @RequestParam(required = false) String author,
+                              @RequestParam(required = false) String genre,
+                              @RequestParam(required = false) Double minRating,
+                              Model model) {
+        List<Book> books = bookService.searchBooks(title, author, genre, minRating);
         model.addAttribute("books", books);
         return "books/list";
     }
@@ -92,16 +109,4 @@ public class BookController {
         bookService.deleteBook(id);
         return "redirect:/books";
     }
-
-    @GetMapping("/search")
-    public String searchBooks(@RequestParam(required = false) String title,
-                              @RequestParam(required = false) String author,
-                              @RequestParam(required = false) String genre,
-                              @RequestParam(required = false) Double minRating,
-                              Model model) {
-        List<Book> books = bookService.searchBooks(title, author, genre, minRating);
-        model.addAttribute("books", books);
-        return "books/list";
-    }
-
 }

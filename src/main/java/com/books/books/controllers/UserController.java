@@ -1,13 +1,18 @@
 package com.books.books.controllers;
 
-import com.books.books.models.Book;
 import com.books.books.models.User;
 import com.books.books.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/users")
@@ -27,7 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String viewUser(@PathVariable Long id, Model model) {
+    public String viewUser(@PathVariable Long id,
+                           Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         return "users/details";
@@ -47,14 +53,19 @@ public class UserController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable Long id,
+                               Model model) {
         User user = userService.getUserById(id);
+        if (user == null) {
+            throw new EntityNotFoundException("User not found with ID: " + id);
+        }
         model.addAttribute("user", user);
         return "users/form";
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute User user) {
+    public String updateUser(@PathVariable Long id,
+                             @ModelAttribute User user) {
         userService.updateUser(id, user);
         return "redirect:/users";
     }

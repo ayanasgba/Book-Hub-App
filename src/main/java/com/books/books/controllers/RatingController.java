@@ -7,18 +7,18 @@ import com.books.books.repositories.BookRepository;
 import com.books.books.repositories.RatingRepository;
 import com.books.books.services.BookService;
 import com.books.books.services.UserService;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/ratings")
-@RequiredArgsConstructor
 public class RatingController {
 
     private final RatingRepository ratingRepository;
@@ -26,29 +26,30 @@ public class RatingController {
     private final BookService bookService;
     private final UserService userService;
 
+    @Autowired
+    public RatingController(RatingRepository ratingRepository,
+                            BookRepository bookRepository,
+                            BookService bookService,
+                            UserService userService) {
+        this.ratingRepository = ratingRepository;
+        this.bookRepository = bookRepository;
+        this.bookService = bookService;
+        this.userService = userService;
+    }
+
     @PostMapping("/book/{bookId}")
     public String rateBook(@PathVariable Long bookId,
                            @RequestParam int point,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                           Model model) {
-
+                           @AuthenticationPrincipal UserDetails userDetails) {
         if (point < 1 || point > 5) {
-            model.addAttribute("error", "Rate from 1 to 5");
-            return "error";
+            throw new IllegalArgumentException("Rating must be between 1 and 5");
         }
 
-        String username = userDetails.getUsername();
-        User user = userService.findByUsername(username);
-
-        Optional<Book> optionalBook = bookRepository.findById(bookId);
-        if (optionalBook.isEmpty()) {
-            model.addAttribute("error", "Book not found");
-            return "error";
-        }
-
-        Book book = optionalBook.get();
-
-        Rating rating = ratingRepository.findByUserAndBook(user, book).orElse(new Rating());
+        User user = userService.findByUsername(userDetails.getUsername());
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with ID: " + bookId));
+        Rating rating = ratingRepository.findByUserAndBook(user, book)
+                .orElse(new Rating());
         rating.setUser(user);
         rating.setBook(book);
         rating.setPoint(point);
@@ -58,5 +59,4 @@ public class RatingController {
 
         return "redirect:/books/" + bookId;
     }
-
 }

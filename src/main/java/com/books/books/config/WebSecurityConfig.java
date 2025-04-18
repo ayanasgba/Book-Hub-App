@@ -19,11 +19,15 @@ import org.springframework.security.config.annotation.authentication.configurati
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-    @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    private CustomSuccessHandler customSuccessHandler;
 
     @Autowired
-    private CustomSuccessHandler customSuccessHandler;
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService,
+                             CustomSuccessHandler customSuccessHandler) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.customSuccessHandler = customSuccessHandler;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,8 +36,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/books/create", "/books/edit/{id}", "/books/delete/{id}")
-                            .hasRole("ADMIN")
+                        .requestMatchers("/books/create", "/books/edit/{id}", "/books/delete/{id}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

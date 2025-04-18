@@ -9,6 +9,5 @@ public class AdminController {
     public String adminPanel() {
         return "admin/panel";
     }
-
 }
 

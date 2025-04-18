@@ -14,13 +14,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers() {
@@ -30,9 +30,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with ID: " + id));
     }
-
 
     @Override
     public void createUser(User user) {
@@ -40,13 +40,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
     public void updateUser(Long id, User user) {
-        User userOld = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
+        User userOld = userRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException(
+                        "User not found with ID: " + id));
         userOld.setUsername(user.getUsername());
         userOld.setEmail(user.getEmail());
         userOld.setPassword(user.getPassword());
@@ -56,23 +53,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException(
+                    "Cannot delete, user not found with ID: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    @Override
     public boolean registerUser(String username, String email, String rawPassword) {
-        if (userRepository.existsByUsername(username)) return false;
+        if (userRepository.existsByUsername(username)) {
+            return false;
+        }
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(rawPassword));
+        newUser.setRoles(Roles.USER);
 
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(Roles.USER);
-
-        userRepository.save(user);
+        userRepository.save(newUser);
         return true;
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with username: " + username));
     }
-
 }
