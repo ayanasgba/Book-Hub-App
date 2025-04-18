@@ -31,7 +31,7 @@ In this application, users can browse books, leave comments and ratings, while a
 
 ---
 
-## 🚀 Installation and Running
+## 🚀 Installation and Running locally
 
 ### 1. Clone the repository
   ```bash
