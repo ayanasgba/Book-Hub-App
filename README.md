@@ -40,10 +40,9 @@ In this application, users can browse books, leave comments and ratings, while a
 ## 🚀 Installation and Running
 
 ### 2. Navigate to the project directory
-
-    ```bash
+```bash
     cd Book-Hub-App
-    ```
+```
     
 ### 3. Set up the database
 - Create a new database in PostgreSQL (or MySQL)  
