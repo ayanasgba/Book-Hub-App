@@ -34,15 +34,17 @@ In this application, users can browse books, leave comments and ratings, while a
 ## 🚀 Installation and Running
 
 ### 1. Clone the repository
-```bash
-git clone https://github.com/ayanasgba/Book-Hub-App.git
-
+  ```bash
+  git clone https://github.com/ayanasgba/Book-Hub-App.git
+  ```
 ## 🚀 Installation and Running
 
 ### 2. Navigate to the project directory
-```bash
-cd Book-Hub-App
 
+    ```bash
+    cd Book-Hub-App
+    ```
+    
 ### 3. Set up the database
 - Create a new database in PostgreSQL (or MySQL)  
 - Configure your database connection settings in `application.properties` or `application.yml`
@@ -50,8 +52,12 @@ cd Book-Hub-App
 ### 4. Run the project
 - **Through your IDE** (e.g., IntelliJ IDEA: Run → `BookstoreApplication`)  
 - **Or via terminal:**
-```bash
-mvn spring-boot:run
+
+    ```bash
+    mvn spring-boot:run
+    ```
+
+---
 
 ## 🧩 Usage
 
